@@ -9,31 +9,37 @@ function AdjustForm(buildingType)
     document.getElementById("residential").style.visibility = "visible";
     document.getElementById("commercial").style.visibility = "hidden";
     document.getElementById("corporate").style.visibility = "hidden";
+    document.getElementById("hybrid").style.visibility = "hidden";
 
   }
    else if(buildingType===2)
   {
   console.log("commercial = 2");
-  document.getElementById("comNbtenant").style.visibility = "visible";
-  document.getElementById("comNbFloors").style.visibility = "visible";
-  document.getElementById("comNbBsmtFloors").style.visibility = "visible";
-  document.getElementById("comNbparking").style.visibility = "visible";
+  document.getElementById("residential").style.visibility = "hidden";
+  document.getElementById("commercial").style.visibility = "visible";
+  document.getElementById("corporate").style.visibility = "hidden";
+  document.getElementById("hybrid").style.visibility = "hidden";
 
 
   }
   else if(buildingType===3)
   {
     console.log("corporate = 3")
-    document.getElementById("activity hours").style.display = "none";
-    document.getElementById("appartment").style.display = "none";
+    document.getElementById("residential").style.visibility = "hidden";
+    document.getElementById("commercial").style.visibility = "hidden";
+    document.getElementById("corporate").style.visibility = "visible";
+    document.getElementById("hybrid").style.visibility = "hidden";
 
 
   }
 
   else if(buildingType===4)
   {
-console.log("hybrid = 4")
-document.getElementById("appartment").style.display = "none"
+    console.log("hybrid = 4")
+    document.getElementById("residential").style.visibility = "hidden";
+    document.getElementById("commercial").style.visibility = "hidden";
+    document.getElementById("corporate").style.visibility = "hidden";
+    document.getElementById("hybrid").style.visibility = "visible";
   }
 }
 
@@ -67,9 +73,9 @@ function price() {
 
 
   function corpQuote(){
-    var occup = document.getElementById("corpMaxPerFloors").value;
-    var floor = document.getElementById("corpNbFloors").value;
-    var bsmt = document.getElementById("corpNbBsmtFloors").value;
+    var occup = parseInt(document.getElementById("corpMaxPerFloors").value);
+    var floor = parseInt(document.getElementById("corpNbFloors").value);
+    var bsmt = parseInt(document.getElementById("corpNbBsmtFloors").value);
     var building = floor + bsmt;
     var totalOccup = occup * building;
     var elvtrs = Math.ceil(totalOccup / 1000);
@@ -77,4 +83,49 @@ function price() {
     var elevReq = Math.ceil(elvtrs / column);
     document.getElementById("corpElev").value = elevReq;
 
+  }
+
+  function corpprice() {
+    var corps = document.getElementById("corpStandard").checked;
+    var corpp = document.getElementById("corpPremium").checked;
+    var corpe = document.getElementById("corpExcelium").checked;
+    var shaftp = document.getElementById("corpElev").value;
+
+    var cors_price = shaftp * 7565 * 1.1;
+    var corp_price = shaftp * 12345 * 1.13;
+    var core_price = shaftp * 15400 * 1.16;
+
+    if(corps)
+      document.getElementById("corPrice").value = cors_price;
+    else if (corpp)
+      document.getElementById("corPrice").value = corp_price;
+    else if (corpe)
+      document.getElementById("corPrice").value = core_price;
+  }
+
+  function comQuote(){
+    var numbelev = parseInt(document.getElementById("comElevt").value);
+    var totalelev = numbelev
+    document.getElementById("comElev").value = Math.ceil(totalelev);
+  }
+   function comprice(){
+    var coms = document.getElementById("comStandard").checked;
+    var comp = document.getElementById("comPremium").checked;
+    var come = document.getElementById("comExcelium").checked;
+    var shaftc = document.getElementById("comElev").value;
+
+    var comss_price = shaftc * 7565 * 1.1;
+    var compp_price = shaftc * 12345 * 1.13;
+    var comee_price = shaftc * 15400 * 1.16;
+
+    if(coms)
+      document.getElementById("comPrice").value = Math.ceil(comss_price);
+    else if (comp)
+      document.getElementById("comPrice").value = Math.ceil(compp_price);
+    else if (come)
+      document.getElementById("comPrice").value = Math.ceil(comee_price);
+  }
+
+  function hybQuote(){
+    
   }

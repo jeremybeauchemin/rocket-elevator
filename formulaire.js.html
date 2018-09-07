@@ -432,22 +432,22 @@
 																						<!-- radio -->
 																						<div class="button-radio">
 																								<label class="radio col-md-1">
-																										<input id="corpStandard" type="radio" name="rdo-btn" value="" onchange="price()">
+																										<input id="corpStandard" type="radio" name="rdo-btn" value="" onchange="corpprice()">
 																										<i></i> Standard
 																								</label>
 																								<label class="radio col-md-1">
-																										<input id="corpPremium" type="radio" name="rdo-btn" value="" onchange="price()">
+																										<input id="corpPremium" type="radio" name="rdo-btn" value="" onchange="corpprice()">
 																										<i></i> Premium
 																								</label>
 																								<label class="radio col-md-1">
-																										<input id="corpExcelium" type="radio" name="rdo-btn" value="" onchange="price()">
+																										<input id="corpExcelium" type="radio" name="rdo-btn" value="" onchange="corpprice()">
 																										<i></i> Excelium
 																								</label>
 																						</div>
 																						<hr>
 																						<div class="col-md-14 text-center">
 																								<label>Estimated Price</label>
-																								<input id="comPrice" type="number" readonly>
+																								<input id="corPrice" type="number" readonly>
 																						</div>
 
 
@@ -476,25 +476,11 @@
 																						<input type="hidden" name="action" value="contact_send" />
 																						<div class="row">
 																								<div class="col-md-4 col-sm-4">
-																										<label>tenant business *</label>
-																										<input id="comNbFloors" type="number" name="contact[res_floors]" value="" class="form-control required" onkeyup="comQuote()"
+																										<label>how many elevators *</label>
+																										<input id="comElevt" type="number" name="contact[res_floors]" value="" class="form-control required" onkeyup="comQuote()"
 																										 onchange="comQuote()" onclick="comQuote()" >
 																									 </div>
-																										 <div class="col-md-4 col-sm-4">
-		 																										<label>How Many floors *</label>
-		 																										<input id="comNbFloors" type="number" name="contact[res_app]" value="" class="form-control required" onkeyup="comQuote()"
-		 																										 onchange="comQuote()" onclick="comQuote()" >
-		 																								</div>
-																								<div class="col-md-4 col-sm-4">
-																										<label>How Many Basement Floors *</label>
-																										<input id="comNbBsmtFloors" type="number" name="contact[res_bsmt_floors]" value="" class="form-control required" onkeyup="comQuote()"
-																										 onchange="comQuote()" onclick="comQuote()" >
-																								</div>
-																								<div class="col-md-4 col-sm-4">
-																										<label>avalaible parking *</label>
-																										<input id="comAvPark" type="number" name="contact[res_bsmt_floors]" value="" class="form-control required" onkeyup="comQuote()"
-																										 onchange="comQuote()" onclick="comQuote()" >
-																								</div>
+
 																						</div>
 																						<hr>
 																						<div class="col-md-14 text-center">
@@ -505,15 +491,15 @@
 																						<!-- radio -->
 																						<div class="button-radio">
 																								<label class="radio col-md-1">
-																										<input id="comStandard" type="radio" name="rdo-btn" value="" onchange="price()">
+																										<input id="comStandard" type="radio" name="rdo-btn" value="" onchange="comprice()">
 																										<i></i> Standard
 																								</label>
 																								<label class="radio col-md-1">
-																										<input id="comPremium" type="radio" name="rdo-btn" value="" onchange="price()">
+																										<input id="comPremium" type="radio" name="rdo-btn" value="" onchange="comprice()">
 																										<i></i> Premium
 																								</label>
 																								<label class="radio col-md-1">
-																										<input id="comExcelium" type="radio" name="rdo-btn" value="" onchange="price()">
+																										<input id="comExcelium" type="radio" name="rdo-btn" value="" onchange="comprice()">
 																										<i></i> Excelium
 																								</label>
 																						</div>
