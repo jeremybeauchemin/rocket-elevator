@@ -6,9 +6,9 @@ function AdjustForm(buildingType)
   if(buildingType===1)
   {
     console.log("residential = 1");
-    document.getElementById("resNbApartments").style.visibility = "visible";
-    document.getElementById("resNbFloors").style.visibility = "visible";
-    document.getElementById("resNbBsmtFloors").style.visibility = "visible";
+    document.getElementById("residential").style.visibility = "visible";
+    document.getElementById("commercial").style.visibility = "hidden";
+    document.getElementById("corporate").style.visibility = "hidden";
 
   }
    else if(buildingType===2)
