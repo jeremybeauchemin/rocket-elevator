@@ -64,11 +64,11 @@ function price() {
   var rese_price = shafts * 15400 * 1.16;
 
   if(res)
-    document.getElementById("resPrice").value = res_price;
+    document.getElementById("resPrice").value = Math.ceil(res_price);
   else if (resp)
-    document.getElementById("resPrice").value = resp_price;
+    document.getElementById("resPrice").value = Math.ceil(resp_price);
   else if (rese)
-    document.getElementById("resPrice").value = rese_price;
+    document.getElementById("resPrice").value = Math.ceil(rese_price);
 }
 
 
@@ -96,11 +96,11 @@ function price() {
     var core_price = shaftp * 15400 * 1.16;
 
     if(corps)
-      document.getElementById("corPrice").value = cors_price;
+      document.getElementById("corPrice").value = Math.ceil(cors_price);
     else if (corpp)
-      document.getElementById("corPrice").value = corp_price;
+      document.getElementById("corPrice").value = Math.ceil(corp_price);
     else if (corpe)
-      document.getElementById("corPrice").value = core_price;
+      document.getElementById("corPrice").value = Math.ceil(core_price);
   }
 
   function comQuote(){
@@ -126,6 +126,32 @@ function price() {
       document.getElementById("comPrice").value = Math.ceil(comee_price);
   }
 
-  function hybQuote(){
-    
+    function hybQuote(){
+      var occupp = parseInt(document.getElementById("hybMaxPerFloors").value);
+      var floorr = parseInt(document.getElementById("hybNbAFloors").value);
+      var bsmtt = parseInt(document.getElementById("hybNbBsmtFloors").value);
+      var buildingg = floorr + bsmtt;
+      var totalOccupp = occupp * buildingg;
+      var elvtrss = Math.ceil(totalOccupp / 1000);
+      var columnn = Math.ceil(buildingg / 20);
+      var elevReqq = Math.ceil(elvtrss / columnn);
+      document.getElementById("hybElev").value = elevReqq;
+  }
+
+  function hybeprice(){
+    var hybs = document.getElementById("hybStandard").checked;
+    var hybp = document.getElementById("hybPremium").checked;
+    var hybe = document.getElementById("hybExcelium").checked;
+    var shafth = document.getElementById("hybElev").value;
+
+    var hybs_price = shafth * 7565 * 1.1;
+    var hybp_price = shafth * 12345 * 1.13;
+    var hybe_price = shafth * 15400 * 1.16;
+
+    if(hybs)
+      document.getElementById("hybPrice").value = Math.ceil(hybs_price);
+    else if (hybp)
+      document.getElementById("hybPrice").value = Math.ceil(hybp_price);
+    else if (hybe)
+      document.getElementById("hybPrice").value = Math.ceil(hybe_price);
   }

@@ -534,11 +534,6 @@
 																																		<input type="hidden" name="action" value="contact_send" />
 																																		<div class="row">
 																																				<div class="col-md-4 col-sm-4">
-																																						<label>tenant business *</label>
-																																						<input id="hybNbFloors" type="number" name="contact[res_floors]" value="" class="form-control required" onkeyup="hybQuote()"
-																																						 onchange="hybQuote()" onclick="hybQuote()" >
-																																				</div>
-																																				<div class="col-md-4 col-sm-4">
 																																						<label>How Many Floors *</label>
 																																						<input id="hybNbAFloors" type="number" name="contact[res_app]" value="" class="form-control required" onkeyup="hybQuote()"
 																																						 onchange="hybQuote()" onclick="hybQuote()" >
@@ -549,39 +544,29 @@
 																																						 onchange="hybQuote()" onclick="hybQuote()" >
 																																				</div>
 																																				<div class="col-md-4 col-sm-4">
-																																						<label>avalaible parking *</label>
-																																						<input id="hybAvPark" type="number" name="contact[res_bsmt_floors]" value="" class="form-control required" onkeyup="hybQuote()"
-																																						 onchange="hybQuote()" onclick="hybQuote()" >
-																																				</div>
-																																				<div class="col-md-4 col-sm-4">
 																																						<label> max person per Floors*</label>
-																																						<input id="corpMaxPerFloors" type="number" name="contact[res_bsmt_floors]" value="" class="form-control required" onkeyup="hybQuote()"
-																																						 onchange="hybQuote()" onclick="hybQuote()" >
-																																				</div>
-																																				<div class="col-md-4 col-sm-4">
-																																						<label> how many hous activity *</label>
-																																						<input id="hybActHours" type="number" name="contact[res_bsmt_floors]" value="" class="form-control required" onkeyup="hybQuote()"
+																																						<input id="hybMaxPerFloors" type="number" name="contact[res_bsmt_floors]" value="" class="form-control required" onkeyup="hybQuote()"
 																																						 onchange="hybQuote()" onclick="hybQuote()" >
 																																				</div>
 																																		</div>
 																																		<hr>
 																																		<div class="col-md-14 text-center">
 																																				<label>Number Of Elevators Required</label>
-																																				<input id="hyb Elev" type="number" readonly>
+																																				<input id="hybElev" type="number" readonly>
 																																		</div>
 																																		<hr>
 																																		<!-- radio -->
 																																		<div class="button-radio">
 																																				<label class="radio col-md-1">
-																																						<input id="hybStandard" type="radio" name="rdo-btn" value="" onchange="price()">
+																																						<input id="hybStandard" type="radio" name="rdo-btn" value="" onchange="hybeprice()">
 																																						<i></i> Standard
 																																				</label>
 																																				<label class="radio col-md-1">
-																																						<input id="hybPremium" type="radio" name="rdo-btn" value="" onchange="price()">
+																																						<input id="hybPremium" type="radio" name="rdo-btn" value="" onchange="hybeprice()">
 																																						<i></i> Premium
 																																				</label>
 																																				<label class="radio col-md-1">
-																																						<input id="hybExcelium" type="radio" name="rdo-btn" value="" onchange="price()">
+																																						<input id="hybExcelium" type="radio" name="rdo-btn" value="" onchange="hybeprice()">
 																																						<i></i> Excelium
 																																				</label>
 																																		</div>
