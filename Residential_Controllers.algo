@@ -86,5 +86,3 @@ SEQUENCE Find Button (Direction,Floor)
     UNTIL CurrentFloor IS floor
     CALL RequestElevator (Elevator,Floor)
   END SEQUENCE
-
- 
