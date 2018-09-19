@@ -56,8 +56,6 @@ SEQUENCE Find Button (Direction,Floor)
                   RETURN Elevator
               ELSE IF CALL ShortestFloorList RETURNING TRUE AND CALL IsNearestElevator RETURNING TRUE THEN
                   RETURN Elevator
-              ELSE IF CALL ShortestFloorList RETURNING TRUE THEN
-                  RETURN Elevator
               END IF
            END IF
         END FOR
@@ -106,12 +104,14 @@ END SEQUENCE
     REPEAT Floor NOT Floor
        COMPUTE CurrentFloor = Floor +1
     UNTIL CurrentFloor IS floor
+    CALL OperateElevator (CurrentFloor,Floor)
   END SEQUENCE
 
   SEQUENCE GoingDown (CurrentFloor,Floor)
   REPEAT Floor NOT Floor
      COMPUTE CurrentFloor = Floor -1
     UNTIL CurrentFloor IS floor
+    CALL OperateElevator (CurrentFloor,Floor)
   END SEQUENCE
 
 SEQUENCE RequestElevator (Elevator,RequestedElevator)
