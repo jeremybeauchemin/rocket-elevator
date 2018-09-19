@@ -10,79 +10,78 @@ SEQUENCE ActivateButton(Direction,Floor)
   SET Button Active
 END SEQUENCE
 
+SEQUENCE DeactiveActivateButton (Direction, Floor)
+   CALL FindActiveButton (Direction, Floor) RETURNING Button
+   SET Button Deactive
+END SEQUENCE
+
 SEQUENCE Find Button (Direction,Floor)
    FOR EACH Button IN Buttons
-     IF Floor = ButtonFloor AND Dicrection = ButtonDirection
+     IF Floor = ButtonFloor AND Direction = ButtonDirection
       THEN RETURN Button
     END FOR
   END SEQUENCE
 
   SEQUENCE ActivateInsideButton (Floor)
    SET Button Active
-    READ ActivateInsideButton
-     SET Floor TO ActivateInsideButton
       CALL Request (Elevator,Floor)
   END SEQUENCE
 
   SEQUENCE FindElevator(Direction,Floor)
       WHILE Elevator NOT Found
-       FOR EACH Elevator in elevators
-       IF Floor = CurrentFloor THEN
-         if Status IS Stopped AND ElevatorDirection IS Direction THEN
-               RETURN Elevator
-          ELSE IS status IS Idle THEN
-               RETURN Elevator
+         FOR EACH Elevator in elevators
+            IF Floor = CurrentFloor THEN
+              if Status IS Stopped AND ElevatorDirection IS Direction THEN
+                   RETURN Elevator
+              ELSE IS status IS Idle THEN
+                   RETURN Elevator
 
-            ELSE IF Floor > CurrentFloor
+            ELSE IF Floor > CurrentFloor THEN
                 IF Status IS Moving AND ElevatorDirection IS GoingUp AND ElevatorDirection IS Direction THEN
+                       RETURN Elevator
+                ELSE IF Status IS Idle THEN
+                   RETURN Elevator
+                ELSE IF Status IS Stopped AND ElevatorDirection IS  GoingUp AND ElevatorDirection IS Direction THEN
+                    RETURN Elevator
+                ELSE IF CALL ShortestFloorList RETURNING TRUE AND CALL IsNearestElevator RETURNING TRUE THEN
+                   RETURN Elevator
+                ELSE IF CALL ShortestFloorList RETURNING TRUE
+                   RETURN Elevator
+            ELSE IF Floor < CurrentFloor THEN
+              IF Status IS Moving AND ElevatorDirection IS GoingDown AND ElevatorDirection IS Direction THEN
                    RETURN Elevator
               ELSE IF Status IS Idle THEN
-               RETURN Elevator
-              ELSE IF Status IS Stopped AND ElevatorDirection IS  GoingUp AND ElevatorDirection IS Direction THEN
-                RETURN Elevator
+                  RETURN Elevator
+              ELSE IF Status IS Stopped AND ElevatorDirection IS  GoingDown AND ElevatorDirection IS Direction THEN
+                  RETURN Elevator
               ELSE IF CALL ShortestFloorList RETURNING TRUE AND CALL IsNearestElevator RETURNING TRUE THEN
-               RETURN Elevator
-              ELSE IF CALL ShortestFloorList RETURNING TRUE
-
-           ELSE IF Floor < CurrentFloor
-               IF Status IS Moving AND ElevatorDirection IS GoingDown AND ElevatorDirection IS Direction THEN
-               RETURN Elevator
-            ELSE IF Status IS Idle THEN
-              RETURN Elevator
-          ELSE IF Status IS Stopped AND ElevatorDirection IS  GoingDown AND ElevatorDirection IS Direction THEN
-              RETURN Elevator
-          ELSE IF CALL ShortestFloorList RETURNING TRUE AND CALL IsNearestElevator RETURNING TRUE THEN
-              RETURN Elevator
-          ELSE IF CALL ShortestFloorList RETURNING TRUE
-            END IF
-          END FOR
-        END WHILE
+                  RETURN Elevator
+              ELSE IF CALL ShortestFloorList RETURNING TRUE THEN
+                  RETURN Elevator
+              END IF
+           END IF
+        END FOR
+     END WHILE
   END SEQUENCE
 
-  SEQUENCE IsNearestElevator (CurrentFloor,Floor)
-       COMPUTE ReferenceGap = |Floor - CurrentFloor|
+SEQUENCE IsNearestElevator (CurrentFloor,Floor)
+        COMPUTE ReferenceGap = |Floor - CurrentFloor|
      FOR EACH Elevator IN Elevators
-       COMPUTE Gap = |ElevatorCurrentFloor - Floor|
-       IF ReferenceGap > Gap THEN
+        COMPUTE Gap = |ElevatorCurrentFloor - Floor|
+      IF ReferenceGap > Gap THEN
           RETURN False
      END FOR
-     RETURN True
-  END SEQUENCE
-
+   RETURN True
+END SEQUENCE
 
   SEQUENCE RequestFloor(Elevator,Floor)
-     IF (ElevatorDirection IS GoingUp AND Floor > CurrentFloor) THEN
+    IF (ElevatorDirection IS GoingUp AND Floor > CurrentFloor) THEN
       ADD Floor TO FloorList
-      ELSE IF (ElevatorDirection IS GoingDown AND Floor IS < CurrentFloor) THEN
+    ELSE IF (ElevatorDirection IS GoingDown AND Floor IS < CurrentFloor) THEN
       ADD Floor TO FloorList
     END IF
        CALL SortFloorList RETURNING SortedFloorList
        SET FloorList TO SortedFloorList
-      END IF
-  END SEQUENCE
-
-  SEQUENCE SortFloorList (FloorList)
-    SORT = CurrentFloor
   END SEQUENCE
 
   SEQUENCE OpenDoor (Elevator)
@@ -103,39 +102,43 @@ SEQUENCE Find Button (Direction,Floor)
     END IF
  END SEQUENCE
 
-  SEQUENCE MoveDown (CurrentFloor,Floor)
+  SEQUENCE GoingUp (CurrentFloor,Floor)
     REPEAT Floor NOT Floor
-       COMPUTE CurrentFloor = Floor -1
-      UNTIL CurrentFloor IS floor
-      CALL RequestElevator (CurrentFloor,Floor)
+       COMPUTE CurrentFloor = Floor +1
+    UNTIL CurrentFloor IS floor
   END SEQUENCE
 
-  SEQUENCE LevelUp (CurrentFloor,Floor)
+  SEQUENCE GoingDown (CurrentFloor,Floor)
   REPEAT Floor NOT Floor
      COMPUTE CurrentFloor = Floor -1
     UNTIL CurrentFloor IS floor
-    CALL RequestElevator (CurrentFloor,Floor)
   END SEQUENCE
 
-  SEQUENCE RequestElevator (Elevator,RequestedElevator)
+SEQUENCE RequestElevator (Elevator,RequestedElevator)
   ADD RequestFloor From FloorList
   CALL ShortestFloorList RETURNING SortOfFloorList
   SET FloorList TO SortedFloorList
-  END SEQUENCE
+END SEQUENCE
 
-  SEQUENCE VerifyWeight
+SEQUENCE OperateElevator (Elevator)
+    READ Floor FROM FloorList
+    IF CurrentFloor IS Floor THEN
+        CALL OpenDoor (Elevator)
+        CALL DeactivateInsideButton
+        CALL DeactivateButton
+    IF CurrentFloor > Floor THEN
+        CALL GoingUp (Elevator, Floor)
+    IF CurrentFloor < Floor THEN
+        CALL GoingDown (Elevator, Floor)
+    END IF
+END SEQUENCE
+
+SEQUENCE VerifyWeight
     GET CurrentWeight
-      IF CurrentWeight >  maxWeight THEN
+      IF CurrentWeight >  MaxWeight THEN
          CALL WeightAlert
-      IF CurrentWeight < maxWeight THEN
-         SET Satus TO maxWeight || Don't Take New Request
-  END SEQUENCE
-
-SEQUENCE WeightAlert
-   WHILE CurrentWeight > maxWeight
-      CALL OpenDoor
-      CALL VerifyWeight
-    END WHILE
+      IF CurrentWeight < MaxWeight THEN
+         SET Satus TO MaxWeight || Don't Take New Request
 END SEQUENCE
 
 SEQUENCE SortFloorList (FloorList)
@@ -153,7 +156,7 @@ SEQUENCE SortFloorList (FloorList)
     UNTIL n = 0
   RETURN SortFloorList
 
-   ELSE IF ElevatorDirection IS GoingDown THEN
+  ELSE IF ElevatorDirection IS GoingDown THEN
       n = length(A)
       REPEAT
           newn = 0
