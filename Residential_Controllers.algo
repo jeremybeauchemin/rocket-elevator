@@ -10,10 +10,12 @@ SEQUENCE ActivateButton(Direction,Floor)
   SET Button Active
 END SEQUENCE
 
-SEQUENCE DeactiveActivateButton (Direction, Floor)
-   CALL FindActiveButton (Direction, Floor) RETURNING Button
-   SET Button Deactive
-END SEQUENCE
+SEQUENCE DesactivateInsideButton(Floor)
+        FOR EACH button IN ButtonsInside
+        IF Floor = ButtonFloor
+        THEN SET Button Inactive
+    END FOR
+END SEQUENCE 
 
 SEQUENCE Find Button (Direction,Floor)
    FOR EACH Button IN Buttons
@@ -22,10 +24,12 @@ SEQUENCE Find Button (Direction,Floor)
     END FOR
   END SEQUENCE
 
-  SEQUENCE ActivateInsideButton (Floor)
+  SEQUENCE ActivateInsideButton(Floor)
    SET Button Active
-      CALL Request (Elevator,Floor)
-  END SEQUENCE
+   READ ActivateInsideButton
+   SET Floor TO ActivateInsideButton
+   CALL RequestedFloor(Elevator, Floor)
+END SEQUENCE
 
   SEQUENCE FindElevator(Direction,Floor)
       WHILE Elevator NOT Found
@@ -134,11 +138,10 @@ SEQUENCE OperateElevator (Elevator)
 END SEQUENCE
 
 SEQUENCE VerifyWeight
-    GET CurrentWeight
-      IF CurrentWeight >  MaxWeight THEN
-         CALL WeightAlert
-      IF CurrentWeight < MaxWeight THEN
-         SET Satus TO MaxWeight || Don't Take New Request
+   CASE ..... OF
+       CurrentWeight > MaxWeight : SET Status TO Maintenance
+       CurrentWeight = MaxWeight : SET status TO MaxWeight || don't take other stops
+       OTHERS : CALL RequestFloor
 END SEQUENCE
 
 SEQUENCE SortFloorList (FloorList)
