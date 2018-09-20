@@ -54,7 +54,7 @@ END SEQUENCE
             IF Floor = CurrentFloor THEN
               if Status IS Stopped AND ElevatorDirection IS Direction THEN
                    RETURN Elevator
-              ELSE IS status IS Idle THEN
+              ELSE IF status IS Idle THEN
                    RETURN Elevator
 
             ELSE IF Floor > CurrentFloor THEN
@@ -64,9 +64,6 @@ END SEQUENCE
                    RETURN Elevator
                 ELSE IF Status IS Stopped AND ElevatorDirection IS  GoingUp AND ElevatorDirection IS Direction THEN
                     RETURN Elevator
-                ELSE IF CALL ElevatorDirection RETURNING TRUE AND CALL IsNearestElevator(CurrentFloor,Floor) RETURNING TRUE THEN
-                   RETURN Elevator
-
 
             ELSE IF Floor < CurrentFloor THEN
               IF Status IS Moving AND ElevatorDirection IS GoingDown AND ElevatorDirection IS Direction THEN
@@ -75,8 +72,8 @@ END SEQUENCE
                   RETURN Elevator
               ELSE IF Status IS Stopped AND ElevatorDirection IS  GoingDown AND ElevatorDirection IS Direction THEN
                   RETURN Elevator
-              ELSE IF  ElevatorDirection RETURNING TRUE AND CALL IsNearestElevator(CurrentFloor,Floor) RETURNING TRUE THEN
-                  RETURN Elevator
+
+              ELSE IF Status IS Moving AND ElevatorDirection IS Direction AND CALL IsNearestElevator (CurrentFloor,Floor) RETURNING
 
                ELSE CALL IsShortestFloorList THEN
                   RETURN Elevator
@@ -105,6 +102,24 @@ SEQUENCE IsNearestElevator (CurrentFloor,Floor)
    RETURN True
 END SEQUENCE
 
+SEQUENCE Request (Elevator,Floor)
+    IF Status IS Idle THEN
+       ADD Floor TO FloorList
+
+    ELSE IF ElevatorDirection IS GoingUp AND Floor > CurrentFloor THEN
+        ADD Floor TO FloorList
+
+    ELSE IF ElevatorDirection IS GoingDown AND Floor < CurrentFloor THEN
+        ADD Floor TO FloorList
+
+    ELSE
+        CALL DesactivateInsideButton(Elevator,Floor)
+    END IF
+    CALL BubbleSort(FloorList,ElevatorDirection) RETURNING SortedFloorList
+    CALL FloorList TO SortFloorList
+    CALL OperateElevator (Elevator)
+END SEQUENCE
+
   SEQUENCE RequestFloor(Elevator,Floor)
     IF (ElevatorDirection IS GoingUp AND Floor > CurrentFloor) THEN
       ADD Floor TO FloorList
@@ -117,14 +132,15 @@ END SEQUENCE
 
   SEQUENCE OpenDoor (Elevator)
      SET Status To Stopped
-   CALL FindActivateButton (Direction,Floor) RETURNING ActivateButton
-   DeactivateButton (ElevatorDirection,CurrentFloor)
-   REPEAT
-       OpenDoor
-       INIT Timer TO 5 Seconds
-   UNTIL Door NOT Obstructed
-   REMOVE FloorList
-   CALL CloseDoor (Elevator)
+       REPEAT
+       Open
+      INIT Timer TO 5 Seconds
+      UNTIL Door Is Not Obstructed
+      REMOVE Floor TO FloorList
+      CALL DeactivateButton(Direction,Floor)
+      CALL DesactivateInsideButton(Direction,Floor)
+      CALL VerifyWeight (weight)
+      Call CloseDoor (Elevator)
 END SEQUENCE
 
   SEQUENCE CloseDoor (Elevator)
