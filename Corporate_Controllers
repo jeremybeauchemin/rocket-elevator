@@ -1,0 +1,51 @@
+SEQUENCE CallElevator(Direction,Floor)
+    CALL AcivateButton (Direction,Floor)
+    CALL FindElevator (Direction,Floor) RETURNING ElevatorNumber
+    CaLL RequestElevator (ElevatorNumber,Floor)
+END SEQUENCE
+
+SEQUENCE CallInside (Elevator,Floor)
+  SET ButtonsInside Activate
+  CALL Request ( Elevator,Floor)
+END SEQUENCE
+
+SEQUENCE ActivateButton(Direction,Floor)
+  CALL FindButton (Direction,Floor) RETURNING FindButton
+  SET Button Active
+END SEQUENCE
+
+SEQUENCE CallFloorFromInside (Elevator, Floor)
+   SET InsideButton Active
+   READ Active InsideButton
+   SET Floor TO Active InsideButton
+   CALL RequestFloor (Elevator, Floor)
+END SEQUENCE
+
+SEQUENCE DeactivateInsideButton (Elevator, Floor)
+ IF CurrentFloor = Active InsideButton
+ SET InsideButton Inactive
+END SEQUENCE
+
+SEQUENCE DesactivateButton(Floor)
+    CALL FindButton (Direction,Floor)
+    SET Button Active
+END SEQUENCE
+
+SEQUENCE Find Button (Direction,Floor)
+   FOR EACH Button IN Buttons
+     IF Floor = ButtonFloor AND Direction = ButtonDirection
+      THEN RETURN Button
+    END FOR
+END SEQUENCE
+
+SEQUENCE ActivateInsideButton(Floor)
+   SET Button Active
+   READ ActivateInsideButton
+   SET Floor TO ActivateInsideButton
+   CALL RequestedFloor(Elevator, Floor)
+END SEQUENCE
+
+SEQUENCE FindElevator (Direction, Floor)
+
+
+END SEQUENCE

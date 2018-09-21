@@ -27,11 +27,9 @@ SEQUENCE DeactivateInsideButton (Elevator, Floor)
  SET InsideButton Inactive
 END SEQUENCE
 
-SEQUENCE DesactivateInsideButton(Floor)
-        FOR EACH button IN ButtonsInside
-        IF Floor = ButtonFloor
-        THEN SET Button Inactive
-    END FOR
+SEQUENCE DesactivateButton(Floor)
+    CALL FindButton (Direction,Floor)
+    SET Button Active
 END SEQUENCE
 
 SEQUENCE Find Button (Direction,Floor)
@@ -57,27 +55,33 @@ END SEQUENCE
               ELSE IF status IS Idle THEN
                    RETURN Elevator
 
-            ELSE IF Floor > CurrentFloor THEN
-                IF Status IS Moving AND ElevatorDirection IS GoingUp AND ElevatorDirection IS Direction THEN
-                       RETURN Elevator
-                ELSE IF Status IS Idle THEN
-                   RETURN Elevator
-                ELSE IF Status IS Stopped AND ElevatorDirection IS  GoingUp AND ElevatorDirection IS Direction THEN
-                    RETURN Elevator
+                   ELSE IF Floor > CurrentFloor
+                      IF Status IS Moving AND ElevatorDirection IS GoingUp AND ElevatorDirection IS Direction AND CALL IsNearestElevator (CurrentFloor, Floor) RETURNING True THEN
+                          RETURN Elevator
+                      ELSE IF Status IS Moving AND ElevatorDirection IS GoingDown AND ElevatorDirection IS Direction THEN
+                          RETURN Elevator
+                      ELSE IF Status is Idle AND IsNearestElevator (CurrentFloor, Floor) RETURNING True THEN
+                          RETURN Elevator
+                      ELSE IF Status is Idle THEN
+                          RETURN Elevator
+                      ELSE IF Status is stopped AND ElevatorDirection IS GoingDown AND ElevatorDirection IS Direction AND CALL IsNearestElevator (CurrentFloor, Floor) RETURNING True THEN
+                          RETURN Elevator
+                      ELSE IF Status is stopped AND ElevatorDirection IS GoingUp AND ElevatorDirection IS Direction THEN
+                          RETURN Elevator
 
-            ELSE IF Floor < CurrentFloor THEN
-              IF Status IS Moving AND ElevatorDirection IS GoingDown AND ElevatorDirection IS Direction THEN
-                   RETURN Elevator
-              ELSE IF Status IS Idle THEN
-                  RETURN Elevator
-              ELSE IF Status IS Stopped AND ElevatorDirection IS  GoingDown AND ElevatorDirection IS Direction THEN
-                  RETURN Elevator
-
-              ELSE IF Status IS Moving AND ElevatorDirection IS Direction AND CALL IsNearestElevator (CurrentFloor,Floor) RETURNING
-
-               ELSE CALL IsShortestFloorList THEN
-                  RETURN Elevator
-
+                      ELSE IF Floor < CurrentFloor
+                         IF Status IS Moving AND ElevatorDirection IS GoingUp AND ElevatorDirection IS Direction AND CALL IsNearestElevator (CurrentFloor, Floor) RETURNING True THEN
+                             RETURN Elevator
+                         ELSE IF Status IS Moving AND ElevatorDirection IS GoingDown AND ElevatorDirection IS Direction THEN
+                             RETURN Elevator
+                         ELSE IF Status is Idle AND IsNearestElevator (CurrentFloor, Floor) RETURNING True THEN
+                             RETURN Elevator
+                         ELSE IF Status is Idle THEN
+                             RETURN Elevator
+                         ELSE IF Status is stopped AND ElevatorDirection IS GoingDown AND ElevatorDirection IS Direction AND CALL IsNearestElevator (CurrentFloor, Floor) RETURNING True THEN
+                             RETURN Elevator
+                         ELSE IF Status is stopped AND ElevatorDirection IS GoingUp AND ElevatorDirection IS Direction THEN
+                             RETURN Elevator
            END IF
         END FOR
      END WHILE
@@ -126,17 +130,17 @@ END SEQUENCE
     ELSE IF (ElevatorDirection IS GoingDown AND Floor IS < CurrentFloor) THEN
       ADD Floor TO FloorList
     END IF
-       CALL SortFloorList RETURNING SortedFloorList
-       SET FloorList TO SortedFloorList
+     CALL SortFloorList RETURNING SortedFloorList
+     SET FloorList TO SortedFloorList
   END SEQUENCE
 
   SEQUENCE OpenDoor (Elevator)
      SET Status To Stopped
        REPEAT
-       Open
+         Open
       INIT Timer TO 5 Seconds
-      UNTIL Door Is Not Obstructed
-      REMOVE Floor TO FloorList
+        UNTIL Door Is Not Obstructed
+        REMOVE Floor TO FloorList
       CALL DeactivateButton(Direction,Floor)
       CALL DesactivateInsideButton(Direction,Floor)
       CALL VerifyWeight (weight)
