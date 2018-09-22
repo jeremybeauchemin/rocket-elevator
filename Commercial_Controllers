@@ -57,10 +57,9 @@ SEQUENCE Find Button(Direction, Floor, Column)
   END SEQUENCE
 
   SEQUENCE FindElevator(Direction, RequestedFloor, Column)
-   WHILE Elevator IS Undefined
        FOR EACH Column in Colums
            IF Floor IS IN Column Range THEN
-               FOR  EACH Elevator IN Column
+               FOR EACH Elevator IN Column
 
             IF Floor = CurrentFloor THEN
               if Status IS Stopped AND ElevatorDirection IS Direction THEN
@@ -84,7 +83,6 @@ SEQUENCE Find Button(Direction, Floor, Column)
 
            END IF
         END FOR
-     END WHILE
   END SEQUENCE
 
   SEQUENCE Elevator.IsShortestFloorList (FloorList)
@@ -134,7 +132,7 @@ END SEQUENCE
      SET FloorList TO SortedFloorList
   END SEQUENCE
 
-SEQUENCE OpenDoor (Elevator)
+SEQUENCE OpenDoor(Elevator)
     REPEAT
        Open
           SET Wait TO 5 Seconds
@@ -144,7 +142,7 @@ SEQUENCE OpenDoor (Elevator)
         Call CloseDoor (Elevator)
 END SEQUENCE
 
-SEQUENCE CloseDoor (Elevator)
+SEQUENCE CloseDoor(Elevator)
    Start Closing Door
    REPEAT
       IF Door IS Closing AND IS Obstructed THEN
@@ -163,29 +161,37 @@ SEQUENCE CloseDoor (Elevator)
    SET ElevatorDirection TO ButtonDirection
  END SEQUENCE
 
- SEQUENCE GoingDown (CurrentFloor, Floor, Column)
+ SEQUENCE GoingDown(CurrentFloor, Floor, Column)
     COMPUTE CurrentFloor = Floor -1
     SET Status TO Moving
     SET ElevatorDirection TO ButtonDirection
  END SEQUENCE
 
-SEQUENCE RequestElevator (Elevator, RequestedElevator, Column)
+ SEQUENCE DisplayFloor(Floor, RequestedFloor, Column)
+   READ CurrentFloor
+   FloorDisplay = CurrentFloor
+   WHILE Elevator NOT IN Maintenance
+       FloorDisplay is Active
+   END WHILE
+END SEQUENCE
+
+SEQUENCE RequestElevator(Elevator, RequestedElevator, Column)
   ADD RequestFloor TO FloorList
   CALL ShortestFloorList RETURNING SortFloorList
   SET FloorList TO SortedFloorList
 END SEQUENCE
 
-SEQUENCE OperateElevator (Elevator)
+SEQUENCE OperateElevator(Elevator)
     WHILE(FloorList IS NOT EMPTY)
     READ Floor FROM FloorList
     IF CurrentFloor IS Floor THEN
-        CALL OpenDoor (Elevator)
+        CALL OpenDoor(Elevator)
         CALL DeactivateInsideButton
         CALL DeactivateButton
     IF CurrentFloor > Floor THEN
-        CALL GoingDOWn (Elevator, Floor)
+        CALL GoingDOWn(Elevator, Floor)
     IF CurrentFloor < Floor THEN
-        CALL GoingUp (Elevator, Floor)
+        CALL GoingUp(Elevator, Floor)
     END IF
    SET Status TO Idle
 END SEQUENCE
@@ -194,10 +200,10 @@ SEQUENCE VerifyWeight
    CASE weight OF
        CurrentWeight > MaxWeight : SET Status TO Maintenance
        CurrentWeight = MaxWeight : SET status TO MaxWeight || don't take other stops
-       OTHERS : CALL RequestFloor (Elevator, Floor)
+       OTHERS : CALL RequestFloor(Elevator, Floor)
 END SEQUENCE
 
-SEQUENCE SortFloorList (FloorList, Column)
+SEQUENCE SortFloorList(FloorList, Column)
   IF ElevatorDirection IS GoingUp THEN
      n = length(A)
     REPEAT
@@ -227,7 +233,7 @@ SEQUENCE SortFloorList (FloorList, Column)
   RETURN SortFloorList
 END SEQUENCE
 
-SEQUENCE Schedule (Status, DayTime, Elevator, Column)
+SEQUENCE Schedule (DayTime, Elevator, Column)
   WHILE Status IS idle AND Floor NOT
       FOR EACH Elevator IN elevators
         IF DayTime > 5 AND DayTime < 9 THEN

@@ -113,6 +113,14 @@ SEQUENCE Request(Elevator, Floor)
     CALL OperateElevator(Elevator)
 END SEQUENCE
 
+SEQUENCE DisplayFloor(Floor, RequestedFloor)
+   READ CurrentFloor
+   FloorDisplay = CurrentFloor
+   WHILE Elevator NOT IN Maintenance
+       FloorDisplay is Active
+   END WHILE
+END SEQUENCE
+
   SEQUENCE RequestFloor(Elevator, Floor)
     IF (ElevatorDirection IS GoingUp AND Floor > CurrentFloor) THEN
       ADD Floor TO FloorList
